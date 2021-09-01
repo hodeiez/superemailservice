@@ -1,0 +1,7 @@
+twillio:
+  api:
+    key: ${TWILLIO_API_KEY}
+  from: ${TWILLIO_FROM_EMAIL}
+
+server:
+  port: 8085
