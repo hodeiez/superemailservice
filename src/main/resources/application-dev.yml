@@ -5,3 +5,10 @@ twillio:
 
 server:
   port: 8085
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue: payments
