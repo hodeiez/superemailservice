@@ -8,7 +8,7 @@ import com.nackademin.superserver.service.dto.TemplateEmailReq;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
+
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 
 /**
  * Created by Hodei Eceiza
@@ -101,7 +100,7 @@ public class MailService {
         mail.setSubject(subject);
         per.addDynamicTemplateData("first_name",plainEmail.getName());
         per.addDynamicTemplateData("content",plainEmail.getContent());
-
+        per.addCC(List.of("test@hotmail.com","test@hotmail.com"));
 
 
         mail.addPersonalization(per);
@@ -129,8 +128,14 @@ public class MailService {
             if (cc == null) {
                 cc = new HashMap<String, Object>();
             }
-            values.forEach(v->cc.put("cc",values));
+            System.out.println(cc.toString());
 
+
+        }
+        public Map<String,Object> getCc(){
+            if(cc==null)
+                return  Collections.<String, Object>emptyMap();
+            return cc;
         }
        // @JsonProperty("dynamic_template_data")
         public Map<String,Object> getDynamicTemplateData() {
@@ -138,6 +143,7 @@ public class MailService {
                 return Collections.<String, Object>emptyMap();
             }
             return dynamic_template_data;
+
         }
 
 
@@ -148,6 +154,7 @@ public class MailService {
                 dynamic_template_data = new HashMap<String, Object>();
             }
             dynamic_template_data.put(key, value);
+
         }
     }
 }
