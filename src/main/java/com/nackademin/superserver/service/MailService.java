@@ -1,5 +1,6 @@
 package com.nackademin.superserver.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nackademin.superserver.conf.MailProperties;
 import com.nackademin.superserver.service.dto.PlainEmailReq;
@@ -16,9 +17,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Hodei Eceiza
@@ -100,8 +101,11 @@ public class MailService {
         mail.setSubject(subject);
         per.addDynamicTemplateData("first_name",plainEmail.getName());
         per.addDynamicTemplateData("content",plainEmail.getContent());
+
+
+
         mail.addPersonalization(per);
-        mail.setTemplateId("d-4628d722ae3647c385d42cb6ada6ba95"); //template id
+        mail.setTemplateId("d-4628d722ae3647c385d42cb6ada6ba95"); //template id add to properties?? create an enum??
 
 
         Request req=new Request();
@@ -114,12 +118,21 @@ public class MailService {
         return resp.getBody();
 
     }
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class TestDynamicTemplatePersonalization extends Personalization {
 
-        @JsonProperty(value = "dynamic_template_data")
+       // @JsonProperty(value = "dynamic_template_data")
         private Map<String, Object> dynamic_template_data;
+        private Map<String, Object> cc;
 
-        @JsonProperty("dynamic_template_data")
+        public void addCC(List<String> values){
+            if (cc == null) {
+                cc = new HashMap<String, Object>();
+            }
+            values.forEach(v->cc.put("cc",values));
+
+        }
+       // @JsonProperty("dynamic_template_data")
         public Map<String,Object> getDynamicTemplateData() {
             if (dynamic_template_data == null) {
                 return Collections.<String, Object>emptyMap();
