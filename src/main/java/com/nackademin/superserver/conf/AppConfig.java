@@ -1,7 +1,6 @@
 package com.nackademin.superserver.conf;
 
-import com.sendgrid.SendGrid;
-import org.springframework.beans.factory.annotation.Value;
+import com.nackademin.superserver.service.MailHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,5 +17,9 @@ public class AppConfig {
     @Bean
     public MailProperties getMailProperties(){
         return new MailProperties();
+    }
+    @Bean
+    public MailHelper geMailHelper(){
+        return new MailHelper();
     }
 }

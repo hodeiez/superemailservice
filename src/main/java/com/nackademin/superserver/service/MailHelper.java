@@ -3,6 +3,7 @@ package com.nackademin.superserver.service;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 
 import java.util.*;
 
@@ -13,8 +14,9 @@ import java.util.*;
  * Project: superserver
  * Copyright: MIT
  */
+//ITS A COPY PASE, have to check it
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MailHelper {
+public class MailHelper extends Personalization {
     @JsonProperty("to")
     private List<Email> tos;
 
@@ -76,6 +78,7 @@ public class MailHelper {
             ccs.add(newEmail);
         }
     }
+
 
     @JsonProperty("bcc")
     public List<Email> getBccs() {

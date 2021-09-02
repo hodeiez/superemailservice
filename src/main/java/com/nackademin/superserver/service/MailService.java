@@ -1,7 +1,6 @@
 package com.nackademin.superserver.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.nackademin.superserver.conf.MailProperties;
 import com.nackademin.superserver.service.dto.PlainEmailReq;
 import com.nackademin.superserver.service.dto.TemplateEmailReq;
@@ -17,7 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+
 
 
 /**
@@ -32,6 +31,7 @@ import java.util.*;
 public class MailService {
 
        private final MailProperties mailProperties;
+       private final MailHelper mailHelper;
     public String sendTestEmail() throws IOException {
         //testing multiple recipients
         Mail mail=new Mail();
@@ -86,24 +86,25 @@ public class MailService {
         return resp.getBody();
 
     }
-    public String sendTemplate(TemplateEmailReq plainEmail) throws IOException {
-        String subject= plainEmail.getSubject();
+    public String sendTemplate(TemplateEmailReq templateEmail) throws IOException {
+        String subject= templateEmail.getSubject();
 
         Mail mail=new Mail();
         Email from =mailProperties.getFromEmail();
 
-        Email to=new Email(plainEmail.getToEmail());
+        Email to=new Email(templateEmail.getToEmail());
 
-        TestDynamicTemplatePersonalization per=new TestDynamicTemplatePersonalization();
-        per.addTo(to);
+        mailHelper.addTo(to);
+        //per.addTo(to);
+
         mail.setFrom(from);
         mail.setSubject(subject);
-        per.addDynamicTemplateData("first_name",plainEmail.getName());
-        per.addDynamicTemplateData("content",plainEmail.getContent());
-        per.addCC(List.of("test@hotmail.com","test@hotmail.com"));
+        mailHelper.addDynamicTemplateData("first_name",templateEmail.getName());
+        mailHelper.addDynamicTemplateData("content",templateEmail.getContent());
+        templateEmail.getCcs().forEach(s-> mailHelper.addCc(new Email(s)));
 
 
-        mail.addPersonalization(per);
+        mail.addPersonalization(mailHelper);
         mail.setTemplateId("d-4628d722ae3647c385d42cb6ada6ba95"); //template id add to properties?? create an enum??
 
 
@@ -117,44 +118,5 @@ public class MailService {
         return resp.getBody();
 
     }
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private static class TestDynamicTemplatePersonalization extends Personalization {
 
-       // @JsonProperty(value = "dynamic_template_data")
-        private Map<String, Object> dynamic_template_data;
-        private Map<String, Object> cc;
-
-        public void addCC(List<String> values){
-            if (cc == null) {
-                cc = new HashMap<String, Object>();
-            }
-            System.out.println(cc.toString());
-
-
-        }
-        public Map<String,Object> getCc(){
-            if(cc==null)
-                return  Collections.<String, Object>emptyMap();
-            return cc;
-        }
-       // @JsonProperty("dynamic_template_data")
-        public Map<String,Object> getDynamicTemplateData() {
-            if (dynamic_template_data == null) {
-                return Collections.<String, Object>emptyMap();
-            }
-            return dynamic_template_data;
-
-        }
-
-
-
-
-        public void addDynamicTemplateData(String key, String value) {
-            if (dynamic_template_data == null) {
-                dynamic_template_data = new HashMap<String, Object>();
-            }
-            dynamic_template_data.put(key, value);
-
-        }
-    }
 }
