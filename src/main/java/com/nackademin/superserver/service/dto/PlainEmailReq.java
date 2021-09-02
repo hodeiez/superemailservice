@@ -2,6 +2,7 @@ package com.nackademin.superserver.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by Hodei Eceiza
@@ -10,6 +11,7 @@ import lombok.Data;
  * Project: superserver
  * Copyright: MIT
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class PlainEmailReq {
