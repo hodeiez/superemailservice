@@ -53,6 +53,7 @@ public class MailController {
     public ResponseEntity<?> sendTemplateEmail(@RequestBody TemplateEmailReq templateEmail){
         try {
             mailService.sendTemplate(templateEmail);
+            System.out.println(templateEmail.toString());
             return ResponseEntity.ok().body("sent to "+ templateEmail.getToEmail());
         } catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
